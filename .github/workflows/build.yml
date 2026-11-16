@@ -9,8 +9,8 @@ on:
 
 jobs:
   build:
-  
-runs-on: ubuntu-24.04
+    runs-on: ubuntu-24.04
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -34,7 +34,7 @@ runs-on: ubuntu-24.04
           yes | sdkmanager --licenses
           sdkmanager --install "platform-tools" "platforms;android-35" "build-tools;35.0.0"
 
-      - name: Build Debug APK
+      - name: Build APK
         run: gradle assembleDebug
 
       - name: Upload APK
