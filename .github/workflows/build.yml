@@ -9,37 +9,45 @@ on:
 
 jobs:
   build:
+    name: Build Android Application
     runs-on: ubuntu-24.04
 
     steps:
-      - name: Checkout code
+      - name: Checkout source code
         uses: actions/checkout@v4
 
-      - name: Setup Java
+      - name: Configure Java 17
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '17'
 
-      - name: Setup Gradle
+      - name: Configure Gradle 8.9
         uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.9'
 
-      - name: Setup Android SDK
+      - name: Configure Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: Install Android SDK
+      - name: Install Android SDK packages
         run: |
           yes | sdkmanager --licenses
           sdkmanager --install "platform-tools" "platforms;android-35" "build-tools;35.0.0"
 
-      - name: Build APK
-        run: gradle assembleDebug
+      - name: Assemble Shree Charbhuja Library APK
+        run: gradle --no-daemon clean assembleDebug --stacktrace
 
-      - name: Upload APK
+      - name: Verify APK file
+        run: |
+          ls -lh app/build/outputs/apk/debug/
+          test -f app/build/outputs/apk/debug/app-debug.apk
+
+      - name: Upload Shree Charbhuja Library APK
         uses: actions/upload-artifact@v4
         with:
           name: Shree-Charbhuja-Library-APK
           path: app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+          retention-days: 7
           
